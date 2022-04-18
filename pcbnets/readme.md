@@ -46,6 +46,15 @@ Notes
 
 ![GPIO nets](pcb-gpio.png)  
 
+In words:
+
+ - GPIO2 outputs LED D1 (low active)
+ - GPIO0 inputs switch S1 (low active) also to P1.IO0
+ - GPIO4 inputs switch S2 (low active)
+ - GPIO15 inputs switch S3 (high active)
+ - GPIO13 is "SDA" for TM1650 (not real I2C)
+ - GPIO12 is "SCL" for TM1650 (not real I2C)
+
 
 (end)
   

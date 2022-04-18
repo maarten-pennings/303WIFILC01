@@ -14,12 +14,29 @@ I made the following programming adapter:
 
 ![programming adapter](programming-adapter.png)
 
+and an official board
+
+![programming adapter board](FTDI-ESP-front.png)
+
+but I can't wait that long, so I hand soldered one.
+
+![programming adapter board](FTDI-ESP-front.jpg)
+
+The pin-header on the right-hand-side has the pins a little bent so that it force-fits.
+
 
 ## Software
 
 My first goal is to see if we can flash the ESP8266.
 I felt confident enough to run three tests in one go: serial, led and the three buttons.
-It is availble as [arduino sketch](clocktest).
+It is available as [arduino sketch](clocktest).
+
+The pins come form the [analyses we did earlier](../pcbnets#gpio-nets), copying the findings:
+ - GPIO2 outputs LED D1 (low active)
+ - GPIO0 inputs switch S1 (low active) also to P1.IO0
+ - GPIO4 inputs switch S2 (low active)
+ - GPIO15 inputs switch S3 (high active)
+
 
 ```C
 // clocktest.ino - tests the LED and switches on the board
@@ -69,7 +86,7 @@ The development cycle is a bit clumsy.
  - In the Arduino IDE press `Upload`.
  - Once the IDE is done uploading, press and release `reset`.
 
-With our clocktest app running, the red LED at the back flashes (200ms on, 800ms off).
+With our `clocktest` app running, the red LED at the back flashes (200ms on, 800ms off).
 It also print to Serial. I pressed the switches one at a time. This is the output. 
 
 ```text
@@ -90,5 +107,27 @@ clocktest.ino
 0012 0 0 0
 0013 0 0 0
 ```
+
+
+## Display
+
+A very important step is display control.
+The [previous analyses](../pcbnets#gpio-nets) gave us this data
+ - TM1650 driver for the display
+ - GPIO13 is "SDA" for TM1650 (not real I2C)
+ - GPIO12 is "SCL" for TM1650 (not real I2C)
+
+The Arduino comes with two. I picked the lightest one (Sketch > Include library):
+the _7 segment display driver for TM1650_ by Anatoli Arkhipenko.
+It is also on [github](https://github.com/arkhipenko/TM1650).
+
+It appears there is one big issue, the segments are ordered in a funny way,
+making the built-in font unusable, see [disptest](disptest).
+
+But I do have full control over all segments, see [video](https://www.youtube.com/watch?v=K6gpgd4KOBo).
+
+Note that the decimal point in the center is replaced by the center colon.
+With the display having 6+6 pins (12), and controlling 4 rows and 8 columns (12), a choice had to be made.
+
 
 (end)
