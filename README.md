@@ -20,5 +20,11 @@ I made a backup of the original firmware, see subdirectory [fwbackup](fwbackup),
 
 This proves that we can communicate with the internal bootloader, so that we can also upload our own firmware.
 
+
+## Flashing a test
+
+With the backup made, let's see if we can flash our own
+[firmware](flash).
+
 (end)
 
