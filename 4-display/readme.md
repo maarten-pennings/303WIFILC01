@@ -77,17 +77,18 @@ gives us the following key points (focus on display; ignoring support for key sc
    It borrows from I2C that it has registers that the host (ESP8266) should write to,
    and those registers have a (one byte) address.
    
- - For displaying content there are two registers per digit, one for _data_ and one for _control_.
- 
- - The four control registers (this is rather hidden in the datasheet) start at location 48H.
-   So for the four digits they are at 0x48, 0x4A, 0x4C and 0x4E.
+ - There is one generic _control_ register at location 48H (0x48).
    
- - The control registers determine whether the digit is on or off, and what brightness it has.
-   It also controls whether the digit has 7 or 9 segments, do not understand that yet.
+ - The control register determines whether the display is on or off, and what brightness it has.
    
    ![control](TM1650-control.png)
 
-   A write of 0b0101_0001 to 0x48 configures digit 1 to have brightness 5, 8 segments and On.
+   A write of 0b0101_0001 to 0x48 configures the display to have brightness 5, 8 segments and power On.
+   
+   Observe that 000 is tagged as brightness 8 - so think of this as (1)000.
+
+   I believe the 7/8 segments settings changes the timing of the digit/segment control 
+   (mode 7 has one segment less; P is always on).
    
  - Since the device does not have an address itself, the example transaction
    has the form `START 48 51 STOP`. In Arduino wire API, we need to begin a transaction 
@@ -101,8 +102,10 @@ gives us the following key points (focus on display; ignoring support for key sc
    Wire.endTransmission();
    ```
 
+ - For displaying content there is a _data_ register per digit.
+ 
  - The data registers (this is overly verbose in the datasheet) for digits 1 to 4
-   are at address 0x68, 0x6A, 0x6C and ox6E (so +20 with respect to the control registers).
+   are at address 0x68, 0x6A, 0x6C and ox6E.
 
    ![data](TM1650-data.png)
    
@@ -113,13 +116,23 @@ gives us the following key points (focus on display; ignoring support for key sc
    previous section.
  
  - To write a `0` to the display, we need to power segments A, B, C, D, E, and F, so that
-   is (blue) bits 0b0011_1111 or 0x3F:
+   is (blue) bits 0b1111_1100 or 0xF3:
 
    ```C++
    Wire.beginTransmission(0x34); // register 0x68
-   Wire.write(0x3F);
+   Wire.write(0xF3);
    Wire.endTransmission();
    ```
+
+
+## Software
+
+To test my understanding of the datasheet and the analysis of the board, I have written 
+an Arduino [sketch](dispself). Enter `b`, `m`, or `p` over serial to step the
+brightess, mode78, or power of the _control_ register.
+
+The _data_ register is fixed to `01:23.`
+
 
 (end)
   
