@@ -6,7 +6,7 @@ Flash my own (test) firmware to the 303WIFILC01 clock.
 ## Introduction
 
 After having made a backup of the original firmware, and the analysis of the connections
-between the key components, I decided to take the plunge: flash my of firmware.
+between the key components, I decided to take the plunge: flash my own firmware.
 
 
 ## Hardware
@@ -16,11 +16,11 @@ I made the following programming adapter:
 
 ![programming adapter](programming-adapter.png)
 
-and an official board
+A render of the board ...
 
 ![programming adapter board](FTDI-ESP-front.png)
 
-but I can't wait that long, so I hand soldered one.
+... but I can't wait that long, so I hand soldered one.
 
 ![programming adapter board](FTDI-ESP-front.jpg)
 

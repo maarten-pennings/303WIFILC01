@@ -14,11 +14,7 @@ The product (PCB) has no branding
  - Shop: [AliExpress CFsunbird Store](https://www.aliexpress.com/item/1005003486084193.html)
  - Documentation: [best found](https://dailystuffstore.com/display-screen/707-1903820-0-8-inch-display-screen-digital-tube-wifi-clock-module-automatic-clock-diy-digital.html)
 
-Notes
- - The back has a "header" P1 that can be connected to a USB-serial adapter.
- - The labels for P1 are confusing; they are _below_ the holes.
- - The P1 5V is indeed a 5V - i.e. connected to + on power header P3 or the 5V of the USB connector.
- - S1 needed extra soldering (top contact was loose) on two different boards.
+I have two boards, and on both S1 needed extra soldering (top contact was loose).
 
 ## User parts
 
@@ -28,9 +24,11 @@ The board features
 
  - Three general purpose buttons (S1, S2, S3); connected to ESP8266.
  - One general purpose red LED (D1); connected to ESP8266.
- - A programming header for the ESP8266 (P1); reset signal is missing.
- - PCB trace antenna for the ESP8266.
- - A 4 digit 7 segment display with colon.
+ - A USB-serial header to program and serial access the ESP8266 (P1); reset signal is missing.
+   - The labels for P1 are a bit confusing; they are _below_ the holes.
+   - The P1 5V is indeed a 5V - i.e. connected to + on power header P3 or the 5V of the USB connector.
+ - PCB trace antenna for the ESP8266 WiFi.
+ - A 4-digit 7 segment display with decimal points and colon.
  - Micro USB (P2) for powering the board; there is no on-bard USB-to-serial chip, so no flashing or serial access to ESP8266.
  - Alternative (P3) 5V power supply.
  - A holder (BT1) for a 3V battery for the time keeping chip (U3).
@@ -68,10 +66,15 @@ The board features
 
 ## Power domains
 
+The board is powered via 5V, but it runs on 3V3; the U1 voltage regulator does the conversion.
+The timekeeping chip (U3) has a battery as auxiliary power supply. 
+
 ![Power domains](pcb-power.png)  
 
 
 ## GPIO nets
+
+How does the ESP8266 control the peripherals (timekeeping chip omitted). 
 
 ![GPIO nets](pcb-gpio.png)  
 
