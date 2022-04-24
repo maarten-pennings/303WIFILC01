@@ -1,5 +1,7 @@
 # Flashing my firmware
 
+Flash my own (test) firmware to the 303WIFILC01 clock.
+
 
 ## Introduction
 

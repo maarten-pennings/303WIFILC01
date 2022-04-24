@@ -1,6 +1,6 @@
 # PCB analysis of the 303WIFILC01 clock
 
-Reverse engineering the board.
+Analyze the 303WIFILC01 clock board.
 
 
 ## First impressions
