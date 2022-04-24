@@ -7,13 +7,13 @@ Home brew firmware for the ESP8266 based _303 WIFI LC 01 clock_.
 ![back](pcbnets/pcb.png)
 
 
-## Board analysis
+## 1. Board analysis
 
 I did a first analysis of the board.
 Find my findings in subdirectory [pcbnets](pcbnets).
 
 
-## Backup of original firmware
+## 2. Backup of original firmware
 
 The goals is to make our firmware and flash that on the board.
 I made a backup of the original firmware, see subdirectory [fwbackup](fwbackup), just in case.
@@ -21,10 +21,13 @@ I made a backup of the original firmware, see subdirectory [fwbackup](fwbackup),
 This proves that we can communicate with the internal bootloader, so that we can also upload our own firmware.
 
 
-## Flashing a test
+## 3. Flashing a test
 
 With the backup made, let's see if we can flash our own
 [firmware](flash).
+
+
+## 4. The display
 
 (end)
 

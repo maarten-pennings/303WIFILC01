@@ -21,6 +21,7 @@ void setup() {
 
 // The segments are strangely ordered. Need to fix this: the TM1650.h font is thus wrong
 int segments[] = { 1<<5, 1<<7, 1<<2, 1<<3, 1<<4, 1<<6, 1<<1, 1<<0 };
+                // F->A  P->B  C->C  D->D  E->E  G->F  B->G  A->P
 int pos;
 int seg;
 
