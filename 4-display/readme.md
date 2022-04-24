@@ -24,11 +24,12 @@ Above and below the battery, find the pins of the display.
 I could not find (a datasheet of) the display.
 It has marking `FJ8401AW`; my guess is that
  - `FJ` indicates the manufacturer
- - `8_0` indicates the size: 0.8"
+ - `8_0` indicates the size: 0.80"
  - `4` indicates number of digits
  - I don't know what the `1` means
  - The `A` means common cathode (a `B` would mean common anode)
  - `W` is for white (O for orange, Y for Yellow, G for green, B for blue and somehow S for red).
+
 For example [ELT5361BY](http://www.yitenuo.com/product/display/three/ELT-5361.html) is
 and 0.56 3-digit Yellow  common Anode display from Etnel LED technology.
 
@@ -52,7 +53,8 @@ I would expect that the corresponding pins are connected, **but they are not**.
 I probed the TM1650 pins and the display pins to see which is connected to which.
 The photo in the first section has that indicated with the black ❶❷❸❹ (digits) and the red ⓿❶❷❸❹❺❻❼ (segments).
 
-We observe that the DIG pins are connected as expected, and also segments CDE but ABFGP are mixed.
+We observe that the DIG pins are connected as expected, 
+and also segments CDE, but segments ABFGP are mixed.
 
  | to light segment | power pin |
  |:----------------:|:---------:|
@@ -72,7 +74,7 @@ The [Chinese datasheet](https://datasheet.lcsc.com/lcsc/1810281208_TM-Shenzhen-T
 gives us the following key points (focus on display; ignoring support for key scan):
 
  - The device is "semi" I2C. 
-   It is I2C in the sense that it has a start and stop, and in between those, bytes are sent. 
+   It is I2C in the sense that it requires a start and stop condition, and in between those, bytes are sent. 
    It is not I2C because the device itself has no I2C address, it needs to be on a bus by its own.
    It borrows from I2C that it has registers that the host (ESP8266) should write to,
    and those registers have a (one byte) address.
