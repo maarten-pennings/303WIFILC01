@@ -79,22 +79,23 @@ gives us the following key points (focus on display; ignoring support for key sc
    
  - There is one generic _control_ register at location 48H (0x48).
    
- - The control register determines whether the display is on or off, and what brightness it has.
+ - The control register determines whether the display is on or off, 
+   whether a 7 or 8 segment display is attached, and what brightness to use.
    
    ![control](TM1650-control.png)
 
+   Observe that 000 is tagged as brightness 8 in the datasheet - think of this as (1)000.
+
+   I believe the 7/8 segments settings changes the timing of the digit/segment control:
+   mode 7 has one segment less (P is always on).
+   
    A write of 0b0101_0001 to 0x48 configures the display to have brightness 5, 8 segments and power On.
    
-   Observe that 000 is tagged as brightness 8 - so think of this as (1)000.
-
-   I believe the 7/8 segments settings changes the timing of the digit/segment control 
-   (mode 7 has one segment less; P is always on).
-   
- - Since the device does not have an address itself, the example transaction
-   has the form `START 48 51 STOP`. In Arduino wire API, we need to begin a transaction 
-   by passing the device address. We can simply pass the register address instead.
+ - Since the device does not have an address itself, the example configuration needs a transaction
+   of the form `START 48 51 STOP`. In the Arduino Wire API, we need to begin a transaction 
+   by passing the _device_ address. For TM1650 we simply pass the _register_ address instead.
    However, a device address is 7 bits and it is appended with a 0 for write. 
-   So we need to send 0x24 instead of 0x48.
+   So we need to pass 0x24 to get 0x48 on the line.
    
    ```C++
    Wire.beginTransmission(0x24); // register 0x48
@@ -105,18 +106,17 @@ gives us the following key points (focus on display; ignoring support for key sc
  - For displaying content there is a _data_ register per digit.
  
  - The data registers (this is overly verbose in the datasheet) for digits 1 to 4
-   are at address 0x68, 0x6A, 0x6C and ox6E.
+   are at address 0x68, 0x6A, 0x6C and 0x6E.
 
    ![data](TM1650-data.png)
    
    This table does show an important property, namely that bits 0, 1, 2, 3, 4, 5, 6, and 7
-   map to segments A, B, C, D, E, F, G, respectively P.
-   
-   In blue I have added what they map to in our 303WIFILC01 board as we learned in the 
-   previous section.
+   map to segments A, B, C, D, E, F, G, respectively P - as one would expect.
+   But our board is wired in different way. The blue labels in the header show where the bits 
+   map to in the 303WIFILC01 board.
  
- - To write a `0` to the display, we need to power segments A, B, C, D, E, and F, so that
-   is (blue) bits 0b1111_1100 or 0xF3:
+ - To write a `0` digit to the display, we need to power segments A, B, C, D, E, and F, so that
+   is the (blue) bits 0b1111_1100 or 0xF3:
 
    ```C++
    Wire.beginTransmission(0x34); // register 0x68
