@@ -16,6 +16,7 @@ The product (PCB) has no branding
 
 I have two boards, and on both S1 needed extra soldering (top contact was loose).
 
+
 ## User parts
 
 ![user parts](pcb-user.png)
@@ -27,13 +28,14 @@ The board features
  - A USB-serial header to program and serial access the ESP8266 (P1); reset signal is missing.
    - The labels for P1 are a bit confusing; they are _below_ the holes.
    - The P1 5V is indeed a 5V - i.e. connected to + on power header P3 or the 5V of the USB connector.
+   - The other P1 pins (TX, RX, IO0) are 3V3, since they hook to the ESP8266.
  - PCB trace antenna for the ESP8266 WiFi.
  - A 4-digit 7 segment display with decimal points and colon.
- - Micro USB (P2) for powering the board; there is no on-bard USB-to-serial chip, so no flashing or serial access to ESP8266.
+ - Micro USB (P2) for powering the board; there is no on-bard USB-to-serial chip, 
+   so no flashing or serial access to ESP8266 over USB.
  - Alternative (P3) 5V power supply.
  - A holder (BT1) for a 3V battery for the time keeping chip (U3).
 
- 
 
 ## Components
 
@@ -90,3 +92,4 @@ In words:
 
 (end)
   
+
