@@ -6,11 +6,11 @@ Reverse engineering the display control of the 303WIFILC01 clock.
 ## TM1650
 
 First, I checked the pinning of the TM1650.
-The datasheet is Chinese only (I could only find bot-translated English versions).
-However finding the pinout from the [Chinese datasheet](https://datasheet.lcsc.com/lcsc/1810281208_TM-Shenzhen-Titan-Micro-Elec-TM1650_C44444.pdf)
+The datasheet is Chinese (I could only find bot-translated English versions).
+However, determining the pinout from the [Chinese datasheet](https://datasheet.lcsc.com/lcsc/1810281208_TM-Shenzhen-Titan-Micro-Elec-TM1650_C44444.pdf)
 is not hard.
 
-In the photo below, find the DIGx pins of the TM1650 in black.
+In the photo below, the DIGx pins of the TM1650 are labelled in black.
 Those are the common cathode pins of the 4 digits.
 In red, find the segment pins A, B, C, D, E, F, G and P (decimal point).
 In blue the other connections (power and I2C).
@@ -20,21 +20,22 @@ In blue the other connections (power and I2C).
 
 ## Display
 
-Above and below the battery, find the pins of the display.
+Above and below the battery, the pins of the display are located.
 I could not find (a datasheet of) the display.
 It has marking `FJ8401AW`; my guess is that
- - `FJ` indicates the manufacturer
- - `8_0` indicates the size: 0.80"
- - `4` indicates number of digits
- - I don't know what the `1` means
- - The `A` means common cathode (a `B` would mean common anode)
+ - `FJ` indicates the manufacturer.
+ - `8_0` indicates the size: 0.80 inch.
+ - `4` indicates the number of digits.
+ - I don't know what the `1` means, it is maybe an indication of which dots
+   (decimal point, colon) are wired.
+ - The `A` means common cathode (a `B` would mean common anode).
  - `W` is for white (O for orange, Y for Yellow, G for green, B for blue and somehow S for red).
 
 For example [ELT5361BY](http://www.yitenuo.com/product/display/three/ELT-5361.html) is
 and 0.56 3-digit Yellow  common Anode display from Etnel LED technology.
 
 I believe the internal schematics of the display, and the pinning is as follows.
-Note the DIG2 does have a "decimal point", but it is not connected. It is wired to the two dots of the colon.
+Note the DIG2 digit does have a "decimal point", but it is not connected. It is wired to the two dots of the colon.
 Again, DIG1, DIG2, DIG3 and DIG4 are the common cathode pins of the four digits.
 The segment pins are labeled A, B, C, D, E, F, G and P (decimal point).
 
@@ -79,7 +80,7 @@ gives us the following key points (focus on display; ignoring support for key sc
    It borrows from I2C that it has registers that the host (ESP8266) should write to,
    and those registers have a (one byte) address.
    
- - There is one generic _control_ register at location 48H (0x48).
+ - There is one system _control_ register at location 48H (0x48).
    
  - The control register determines whether the display is on or off, 
    whether a 7 or 8 segment display is attached, and what brightness to use.
@@ -104,6 +105,10 @@ gives us the following key points (focus on display; ignoring support for key sc
    Wire.write(0x51);
    Wire.endTransmission();
    ```
+
+ - Fortunately all TM1650 registers are _even_
+   so the trick to replace the device address
+   by the register address always works.
 
  - For displaying content there is a _data_ register per digit.
  
