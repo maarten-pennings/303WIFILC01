@@ -135,7 +135,8 @@ gives us the following key points (focus on display; ignoring support for key sc
 ## Software
 
 To test my understanding of the datasheet and the analysis of the board, I have written 
-an Arduino [sketch](dispself). Enter `b`, `m`, or `p` over serial to step the
+an Arduino [sketch](dispself) which controls the TM1650 directly, no longer using a standard driver.
+It has a small command interpreter, enter `b`, `m`, or `p` over serial to step the
 brightness, mode78, or power of the _control_ register. The _data_ register is fixed to `13:57.`
 
 I tested this with a logic analyzer on DIG1, DIG2, DIG3 and DIG4, and on (TM1650) segments C, D, E, and P.
