@@ -139,8 +139,8 @@ an Arduino [sketch](dispself). Enter `b`, `m`, or `p` over serial to step the
 brightness, mode78, or power of the _control_ register. The _data_ register is fixed to `13:57.`
 
 I tested this with a logic analyzer on DIG1, DIG2, DIG3 and DIG4, and on (TM1650) segments C, D, E, and P.
-Note that this maps the display segments C, D, E, and B. 
-My logic analyzer has only 8 channels, so I could not monitor the other segments
+Note that this maps to display segments C, D, E, and B (see [connection](#connection)). 
+My logic analyzer has only 8 channels, so I could not monitor the other segments.
 
 
 The first test was brightness 8 (max) and mode 8.
@@ -149,25 +149,25 @@ The first test was brightness 8 (max) and mode 8.
 
 Observe that
 
- - A 4-digit cycle takes 4.68ms
+ - A 4-digit cycle takes 4.68ms.
  - At brightness 8, the common cathodes (DIG1, DIG2, DIG3 and DIG4) each is low 1.17ms. 
-   Note that 1.17 × 4 = 4.68, so the entire cycle digits are lit.
+   Note that 1.17 × 4 = 4.68, so the entire cycle always one digit is lit.
  - When DIG1 is low (timing marker 1), segments B and C are high, forming a `1` on the display. 
    Recall that display segment B is powered by TM1650 segment P. 
  - When DIG2 is low  (timing marker 3), segments B, C, and D are high, forming a `3:` on the display. 
-   Other segments (A, G, P) are also on, but not connected to the logic analyzer.
+   Other segments (A, G, P) are presumably also on, but not connected to the logic analyzer.
  - When DIG3 is low  (timing marker 5), segments C and D are high, forming a `5` on the display. 
-   Other segments (A, F, G) are also on, but not connected to the logic analyzer.
+   Other segments (A, F, G) are not connected.
  - When DIG4 is low  (timing marker 7), segments B and C are high, forming a `7.` on the display. 
-   Other segments (A, P) are also on, but not connected to the logic analyzer.
+   Other segments (A, P) are not connected.
 
-For the next test brightness is set to 1 (min), keeping mode at 8.
+For the next test, brightness is set to 1 (min), keeping mode at 8.
 
 ![brightness 1 (min), mode 8](1357--brightness1-mode8.png)
 
 Observe that
 
- - A 4-digit cycle still takes 4.68ms
+ - A 4-digit cycle still takes 4.68ms.
  - At brightness 1, the common cathodes (DIG1, DIG2, DIG3 and DIG4) each is low 0.146ms. 
    Note that 0.146 × 8 = 1.17, so the illumination duration of each period (1.17ms) is divided in 8 chunks.
    In other words, the digits are now powered 1/8th of the time.
