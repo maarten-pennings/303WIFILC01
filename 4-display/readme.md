@@ -181,5 +181,16 @@ For the next test brightness is kept at 1 (min), but mode is switched to 7-segme
 The diagram is the same as before with one exception: the decimal point (TM1650 pin P connected to display segment B) is always on.
 I do not understand why that makes sense.
 
+
+## Wrapping up
+
+To wrap up the display control, I wrote a final sketch [fonttest](fonttest).
+It has three features
+
+ - My own simple TM1650 driver
+ - Mapping bits 0, 1, 2, 3, 4, 5, 6, 7, and 8 to segments A, B, C, D, E, F, G, and P by applying a bit shuffle lookup.
+ - Inclusion of the [lookAlike7s font](https://github.com/maarten-pennings/SevenSegment-over-Serial/tree/main/font#lookalike7s)
+ - A demo of all printable ASCII characters (32..127).
+ 
 (end)
   
