@@ -30,7 +30,14 @@ With the backup made, let's see if we can flash our own firmware, see subdirecto
 ## 4. The display
 
 The firmware illuminated unexpected segments. Time to analyze the display,
-see subdirectory [display](4-display).
+see subdirectory [4-display](4-display).
+
+
+## 5. The new clock firmware
+
+With the board reverse engineered, it is time to write my own firmware.
+See subdirectory [5-clock](5-clock).
+
 
 (end)
 
