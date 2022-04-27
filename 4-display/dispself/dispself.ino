@@ -9,9 +9,9 @@ TM1650 tm1650;
 #define SCL_PIN 12
 #define SDA_PIN 13
 
-int brightness;
-int mode78;
-int power;
+int brightness=0;
+int mode78=0;
+int power=1;
 
 void set_control() {
   Serial.printf("brightness=%d, mode78=%d, power=%d\n",brightness,mode78,power);
@@ -29,22 +29,22 @@ void setup() {
 
   Wire.beginTransmission(0x34); // register 0x68 DIG1DATA
   //           BFAEDCGP       
-  Wire.write(0b11111100);       // segments for '0'
+  Wire.write(0b10000100);       // segments for '1'
   Wire.endTransmission();
 
   Wire.beginTransmission(0x35); // register 0x6A DIG2DATA
   //           BFAEDCGP       
-  Wire.write(0b10000101);       // segments for '1:'
+  Wire.write(0b10101111);       // segments for '3:'
   Wire.endTransmission();
 
   Wire.beginTransmission(0x36); // register 0x6C DIG3DATA
   //           BFAEDCGP       
-  Wire.write(0b10111010);       // segments for '2'
+  Wire.write(0b01101110);       // segments for '5'
   Wire.endTransmission();
 
   Wire.beginTransmission(0x37); // register 0x6E DIG3DATA
   //           BFAEDCGP       
-  Wire.write(0b10101111);       // segments for '3.'
+  Wire.write(0b10100101);       // segments for '7.'
   Wire.endTransmission();
 
   set_control();
