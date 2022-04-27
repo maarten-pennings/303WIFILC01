@@ -1,4 +1,4 @@
-// fonttest.ino - tests for the TM1650 display controller - own driver
+// fonttest.ino - tests for the TM1650 display controller - own driver - segment remap and font
 // board: Generic ESP8266 module
 
 #include <Wire.h>
