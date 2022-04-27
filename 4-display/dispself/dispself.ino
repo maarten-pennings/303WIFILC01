@@ -1,17 +1,15 @@
-// disptest.ino - tests for the TM1650 display controller
+// dispself.ino - tests for the TM1650 display controller - own driver
 // board: Generic ESP8266 module
 
 #include <Wire.h>
-#include <TM1650.h> // 7 segment display driver for TM1650 by 2015 Anatoli Arkhipenko (Sketch > Include library)
-
-TM1650 tm1650;
 
 #define SCL_PIN 12
 #define SDA_PIN 13
 
-int brightness=0;
-int mode78=0;
-int power=1;
+// Control parameters
+int brightness = 0;
+int mode78 = 0;
+int power = 1;
 
 void set_control() {
   Serial.printf("brightness=%d, mode78=%d, power=%d\n",brightness,mode78,power);
