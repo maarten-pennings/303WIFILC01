@@ -1,4 +1,4 @@
-// basicclock.ino - alternative firmware for 303WIFILC01: basic NTP clock
+// nCLC.ino - alternative firmware for 303WIFILC01: basic NTP clock
 // board: Generic ESP8266 module
 #define VERSION "1.0"
 
@@ -35,7 +35,7 @@ Cfg cfg("Clock", cfg_fields, CFG_SERIALLVL_USR, CFG_LED_PIN);
 void setup() {
   Serial.begin(115200);
   Serial.printf("\n\n");
-  Serial.printf("main: Welcome to basicclock %s\n",VERSION);
+  Serial.printf("main: Welcome to nCLC a basic NTP clock %s\n",VERSION);
 
   // On boot: check if config button is pressed
   cfg.check(60,CFG_BUT_PIN); // Wait 60 flashes (of 50ms) for a change on pin CFG_BUT_PIN
