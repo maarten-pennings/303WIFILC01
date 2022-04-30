@@ -10,7 +10,7 @@ ESP8266WiFiMulti wifi;
 
 // Sets host name, based on MAC address
 static void wifi_sethostname(int len=WL_MAC_ADDR_LENGTH) {
-  const char prefix[]= "Clock-";
+  const char prefix[]= "nCLC-";
   char hname[sizeof(prefix)+2*WL_MAC_ADDR_LENGTH]; // sizeof(prefix) includes terminating 0
   char * p= (char*)&hname;
   for( const char * q=prefix; *q!=0; ) *p++= *q++;
@@ -34,8 +34,8 @@ void wifi_init(char*s1,char*p1,char*s2,char*p2, char*s3,char*p3) {
   wifi_sethostname(3);
   WiFi.persistent(false);
   WiFi.mode(WIFI_STA);
-  Serial.printf("wifi: init:");
 
+  Serial.printf("wifi: APs:");
   // Get AP's from config. 1st is mandatory, others are optional
   if( s1[0]!='0' ) {
     wifi.addAP(s1,p1);
@@ -49,15 +49,15 @@ void wifi_init(char*s1,char*p1,char*s2,char*p2, char*s3,char*p3) {
     wifi.addAP(s3,p3);
     Serial.printf(" %s",s3);
   }
-
   Serial.printf("\n");
+  wifi_isconnected();
 }
 
 
 // Prints WiFi status to the user (over Serial, only when changed), and returns true iff connected
 bool wifi_isconnected() {
   static bool wifi_on= false;
-  if( wifi.run()==WL_CONNECTED ) {
+  if( wifi.run()==WL_CONNECTED ) { // Unfortunately, this is a blocking call
     if( !wifi_on ) Serial.printf("wifi: connected to %s, IP address %s\n", WiFi.SSID().c_str(), WiFi.localIP().toString().c_str() );
     wifi_on= true;
   } else {
