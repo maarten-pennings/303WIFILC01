@@ -4,7 +4,7 @@ New firmware for the ESP8266 based _303 WIFI LC 01 clock_.
 
 ## nCLC - a basic NTP clock
 
-A basic NTP clock is available in source [nCLC](nCLC) or as binary [elf](nCLC.ino.bin).
+A basic NTP clock is available in source [nCLC](nCLC) or as [binary](nCLC.ino.bin).
 Features:
 
  - Pressing button SET brings the clock in configuration mode.
@@ -21,7 +21,7 @@ in the [GNU manuals](https://www.gnu.org/software/libc/manual/html_node/TZ-Varia
 
 ![configuration](nCLC-cfg.jpg)
 
-To upload the elf, either use the tool from [step 2](../2-fwbackup)
+To upload the binary, use the tool from [step 2](../2-fwbackup)
 I had some trouble ("Possible serial noise or corruption.");
 it might be wise to lower to `--baud 57600` or even `--baud 9600`.
 
@@ -46,7 +46,7 @@ Erasing flash (this may take a while)...
 Chip erase completed successfully in 0.0s
 Hard resetting via RTS pin...
 
-(env) C:\Repos\303WIFILC01\2-fwbackup>python  env\Lib\site-packages\esptool.py  --port COM9  --baud 57600  write_flash 0x000 ..\5-clock\nCLC.ino.bin
+(env) C:\Repos\303WIFILC01\2-fwbackup>python  env\Lib\site-packages\esptool.py  --port COM9  --baud 57600  write_flash 0x0000 ..\5-clock\nCLC.ino.bin
 esptool.py v3.3
 Serial port COM9
 Connecting.............
