@@ -46,5 +46,10 @@ However, I also want the clock to show whose birthday it is today. Maintaining a
 So I decided to check if the ESP can read a Google docs spreadsheet. Here is a proof of concept [6-webcfg](6-webcfg).
 
 
+## 7. Birthdays
+
+The final firmware is a clock that shows upcoming birthdays, see [7-bdays](7-bdays).
+
+
 (end)
 

@@ -60,7 +60,7 @@ static int cal_days_in_month(int month ) {
 int cal_daynum(int month, int day ) {
   // We assume feb to have 28 so that future events appear closer
   static int num[13] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
-  return num[month]+day;
+  return num[month-1]+day;
 }
 
 
