@@ -3,7 +3,7 @@
 ## Introduction
 
 Many ESP8266 applications need some configuration.
-There are several approaches
+There are several approaches:
 
 - Hard code them in the source code. Seen often are `#define`s with `SSID` and `PASSWORD`.
 - Store them in local EEPROM or flash file system
@@ -14,24 +14,25 @@ Store the configuration on a public web server and let the ESP8266 load that.
 This is especially useful when the amount of information is larger, and needs to be updated modestly frequently.
 I needed this for a list of birthdays for a clock that signals there is a party.
 
-There are some consideration for choosing a where and how to store the config file.
+There are some consideration for choosing where and how to store the configuration file.
 
 - Easiest would be to store the file on a plain `http` server, however `https` is the norm these days.
-  We need to add an SSL library to the ESP firmware
-- Easiest would be to need no log-in on the server, 
+  We need to add an SSL library to the ESP firmware.
+- Easiest would be to have a server which doesn't need log-in, 
   otherwise would have to add an authentication library and login credentials to the ESP firmware.
 - Easiest would be to free-ride on existing services like `github` or `google docs`.
-  Files on `github` are publicly readable (good fro ESP), but also very publicly visible (everyoen can find them), 
+  Files on `github` are publicly readable (easy for the ESP), but also very publicly visible (everyone can find them), 
   and every change needs a commit. A `google docs` file can be made publicly readable 
-  (share public by anyone with link), but as long as the link is kept private, the file is "unfiendable".
-- Easiest would be to have a plain text file, because we need to load and parse the file on the ESP.
+  ("share public by anyone with link"), but as long as the link is kept private, the file is "unfiendable".
+  No commits needs for changes.
+- Easiest would be to have a plain _text_ file, because we need to load and parse the file on the ESP.
   So a `github` text file sounds good, but we found that a google spreadsheet can be downloaded as CSV, 
   which is also good.
 
-Conclusion: A publicly shared google spreadsheet, editable by the owner, downloaded as CSV by the ESP is the chosen solution.
+Conclusion: A publicly shared google spreadsheet, editable by the owner, downloaded as CSV by the ESP, is the chosen solution.
 
-It appeared that there is on complexity: 
-a google docs URL gets a temporary redirect URL every time we access it. This makes the ESP firmware a bit harder
+It appeared that there is one additional complexity for this solution: 
+a google docs URL gets a temporary redirect URL every time we access it. This makes the ESP firmware a bit harder.
 
 
 
@@ -48,30 +49,33 @@ a google docs URL gets a temporary redirect URL every time we access it. This ma
 - Record the URL of the sheet, in my case that is
   `https://docs.google.com/spreadsheets/d/1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw/edit#gid=0`.
   Two number are important, the long number in the middle `1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw` and the 
-  short number at the end after gid `0`. The long number identifies the spreadsheet, the short number the tab.
+  short number at the end (after gid) `0`. The long number identifies the spreadsheet, the short number the tab.
   The short number is `0` for the first tab of a spreadsheet, but subsequent tabs have wilder numbers like `1520656455`.
 - This spreadsheet will only be accessible with your google account.
   It is not nice to have to enter your google credentials in the ESP8266 firmware.
   Instead we make the spreadsheet _public_: click the green Share button in the upper right corner.
-  
+  Two windows pop up: the top one to share the file with people by name. 
+  We need the bottom one to share with "Anyone with the link".
   ![Share spreadsheet](share-anyone-viewer.png)
   
-  Two windows pop up: the top one to share the file with people by name. 
-  We need the bottom one to share with "Anyone with the link", but for a bit of added safety "Viewer" access rights.
-- We do not need to copy the URL, because it is similar to the long and short number above, and we need to tweak it anyhow.
-- We are done, we can close the browser.
+  Click that one, and for a bit of added safety ensure "Viewer" access rights.
+- We do not need to "Copy link", because the URL is similar to the long and short number above, and we need to tweak it anyhow.
+  So, we are done, and we can close the browser.
 
-The URL we need is then
+The URL we will use (download tab as CSV) is then
 
 > `https://docs.google.com/spreadsheets/d/` [long number] `/export?format=csv&gid=` [short number]
 
-In our case that would be
+I found this via the File > Download > Comma Separated Values (and having developer console open to capture the URL).
+
+In our case the URL would be
 
 > `https://docs.google.com/spreadsheets/d/1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw/export?format=csv&gid=0`
 
-Try it out by clicking this [link](https://docs.google.com/spreadsheets/d/1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw/export?format=csv&gid=0)
+Try it out by clicking this [link](https://docs.google.com/spreadsheets/d/1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw/export?format=csv&gid=0) 
+to mimic the ESP and download the CSV. 
 
-If you have `wget` on your machine you can also try it
+If you have `wget` on your machine you can also try it on the command line.
 
 ```bash
 maarten@Desktop-Maarten MINGW64 ~/Desktop
@@ -99,6 +103,13 @@ $ cat LedControl.csv
 This results in a file `LedControl.csv`, which contains a single line with content `3`.
 We also see that `wget` did need two GETs. The first to `docs.google.com`, our original URL, 
 and the second to `doc-0o-34-sheets.googleusercontent.com` for the temporary redirect flagged by the first.
+
+
+By the way a similar URL (`edit` instead of `export` at the end) `https://docs.google.com/spreadsheets/d/1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw/edit#gid=0`
+will open [google docs](https://docs.google.com/spreadsheets/d/1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw/edit#gid=0), 
+but in "View only" mode.
+
+![View only](view-only.png)
 
 
 ## The firmware
