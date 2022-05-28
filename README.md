@@ -36,7 +36,14 @@ see subdirectory [4-display](4-display).
 ## 5. The new clock firmware
 
 With the board reverse engineered, it is time to write my own firmware.
-See subdirectory [5-clock](5-clock).
+A basic NTP clock, see subdirectory [5-clock](5-clock).
+
+
+## 6. Web config
+
+The NTP clock form the previous section already has a configuration option in EEPROM, e.g. for the WiFi AP to connect to.
+However, I also want the clock to show whose birthday it is today. Maintaining a list of birthdays via the EEPROM is too clumsy.
+So I decided to check if the ESP can read a Google docs spreadsheet. Here is a proof of concept [6-webcfg](6-webcfg).
 
 
 (end)
