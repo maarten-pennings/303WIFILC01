@@ -19,11 +19,11 @@ There are some consideration for choosing where and how to store the configurati
 - Easiest would be to store the file on a plain `http` server, however `https` is the norm these days.
   We need to add an SSL library to the ESP firmware.
 - Easiest would be to have a server which doesn't need log-in, 
-  otherwise would have to add an authentication library and login credentials to the ESP firmware.
+  otherwise we would have to add an authentication library and login credentials to the ESP firmware.
 - Easiest would be to free-ride on existing services like `github` or `google docs`.
   Files on `github` are publicly readable (easy for the ESP), but also very publicly visible (everyone can find them), 
   and every change needs a commit. A `google docs` file can be made publicly readable 
-  ("share public by anyone with link"), but as long as the link is kept private, the file is "unfiendable".
+  ("share public by anyone with link"), but as long as the link is kept private, the file is "unfindable".
   No commits needs for changes.
 - Easiest would be to have a plain _text_ file, because we need to load and parse the file on the ESP.
   So a `github` text file sounds good, but we found that a google spreadsheet can be downloaded as CSV, 
@@ -58,7 +58,7 @@ a google docs URL gets a temporary redirect URL every time we access it. This ma
   We need the bottom one to share with "Anyone with the link".
   ![Share spreadsheet](share-anyone-viewer.png)
   
-  Click that one, and for a bit of added safety ensure "Viewer" access rights.
+  Click the lower one, and for a bit of added safety ensure "Viewer" access rights (no writes)
 - We do not need to "Copy link", because the URL is similar to the long and short number above, and we need to tweak it anyhow.
   So, we are done, and we can close the browser.
 
@@ -107,7 +107,7 @@ and the second to `doc-0o-34-sheets.googleusercontent.com` for the temporary red
 
 By the way a similar URL (`edit` instead of `export` at the end) `https://docs.google.com/spreadsheets/d/1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw/edit#gid=0`
 will open [google docs](https://docs.google.com/spreadsheets/d/1mcsbrp1kGm0c29l3nXLqQ833ojlBLRUvd5v7cRqZNAw/edit#gid=0), 
-but in "View only" mode.
+in "View only" mode, because that's how we configured this share URL.
 
 ![View only](view-only.png)
 
@@ -120,7 +120,7 @@ I have written a proof of concept firmware [webcfgled](webcfgled) that constantl
 If that fails it will flash the built-in LED 5 times very rapidly.
 
 If it succeeds downloading the file and parsing the number `x` on cell A1, 
-it will flash the built-in LED 1 time very rapidly, and the `x` times very slowly.
+it will flash the built-in LED 1 time very rapidly, and then `x` times very slowly.
 
 This is a session where I change cell A1 of the spreadsheet while the firmware is running.
 
