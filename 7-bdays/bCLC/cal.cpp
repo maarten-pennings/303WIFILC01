@@ -167,7 +167,7 @@ static int cal_parseline(String content, int from, int till) {
   //Serial.printf("\n'%s' #=%d %d..%d, ix=%d, /,/%d\n",content.c_str(),content.length(),from,till,ix, pos);
   if( pos == -1 ) return 1; // missing comma in record
   if( pos == 0 ) return 2; // missing name in record
-  if( pos+11 != till ) return 3; // date is not 10 long
+  if( pos+11 != till ) return 3; // date is not 10 long (or extra column on some record, giving all record including the first an extra column)
   if( content[pos+5]!='-' ) return 4; // year-month dash missing
   if( content[pos+8]!='-' ) return 5; // month-day dash missing
   // Extract year
@@ -216,31 +216,21 @@ int cal_load(const char * url) {
   // First download calendar
   String content;
   int error1 = cal_getfile(url,content);
-  if( error1>0 ) { Serial.printf("ERROR code expected to be negative (%d)",error1 ); return CAL_ERROR_UNEXPECTED; }
+  if( error1>0 ) { Serial.printf("cal : ERROR code expected to be negative (%d)",error1 ); return CAL_ERROR_UNEXPECTED; }
   if( error1!=0 ) return error1;
   
   // Next, parse the file content
   int error2 = cal_parse(content);
-  // Sort anyhow, so that the part till the error is usable
+  // Sort even on error, so that the part till the error is usable
   qsort( cal_list, cal_size_act, sizeof(cal_list[0]), cal_lt );
-  if( !( 0<=error2 && error2<10 ) ) { Serial.printf("ERROR code expected to be 1..9 (%d)",error2 ); return CAL_ERROR_UNEXPECTED; }
-  if( error2!=0 ) { int report = 10*(cal_size_act+1) + error2; Serial.printf("ERROR %d (cal record %d has error %d)\n",report,cal_size_act+1,error2); return report; }
+  if( !( 0<=error2 && error2<10 ) ) { Serial.printf("cal : ERROR code expected to be 1..9 (%d)",error2 ); return CAL_ERROR_UNEXPECTED; }
+  if( error2!=0 ) { int report = 10*(cal_size_act+1) + error2; Serial.printf("cal : record %d has error %d\n",cal_size_act+1,error2); return report; }
 
   // Do we have a calendar?
   if( cal_size_act==0 ) { Serial.printf("ERROR cal empty\n"); return CAL_EMPTY; }
 
   // Feedback
   Serial.printf("cal : loaded %d\n",cal_size_act);
-  //  for( int i=0; i<cal_size_act; i++ ) Serial.printf( "cal : %3d. %s %4d-%02d-%02d\n", i, cal_list[i].label.c_str(), cal_list[i].year, cal_list[i].month, cal_list[i].day );
-  //  int month,day;
-  //  month= 1; day= 1; Serial.printf("yyyy-%02d-%02d %d\n", month, day, cal_findfirst(month,day) );
-  //  month= 2; day= 3; Serial.printf("yyyy-%02d-%02d %d\n", month, day, cal_findfirst(month,day) );
-  //  month= 2; day= 4; Serial.printf("yyyy-%02d-%02d %d\n", month, day, cal_findfirst(month,day) );
-  //  month= 2; day= 5; Serial.printf("yyyy-%02d-%02d %d\n", month, day, cal_findfirst(month,day) );
-  //  month=10; day=16; Serial.printf("yyyy-%02d-%02d %d\n", month, day, cal_findfirst(month,day) );
-  //  month=10; day=17; Serial.printf("yyyy-%02d-%02d %d\n", month, day, cal_findfirst(month,day) );
-  //  month=10; day=18; Serial.printf("yyyy-%02d-%02d %d\n", month, day, cal_findfirst(month,day) );
-  //  month=12; day=32; Serial.printf("yyyy-%02d-%02d %d\n", month, day, cal_findfirst(month,day) );
 
   return 0;
 }

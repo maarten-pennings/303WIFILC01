@@ -2,6 +2,8 @@
 
 Home brew firmware for the ESP8266 based _303 WIFI LC 01 clock_.
 
+[![Video](video.png)](https://youtu.be/UseIozlsI0w)
+
 ![front](1-pcbnets/front.jpg)
 
 ![back](1-pcbnets/pcb.png)

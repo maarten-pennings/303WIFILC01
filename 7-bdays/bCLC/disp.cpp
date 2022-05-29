@@ -6,7 +6,7 @@
 #include "disp.h"
 
 
-// A font, optimized for readability, for a 7 segment display.
+// A font, optimized for readability, for a 7 segment display (tewaked from SSoS).
 // Support characters 0..127 (but first 32 are empty).
 static const uint8_t disp_font[0x80] = {
   0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, // padding for 0x0_
@@ -58,7 +58,7 @@ static const uint8_t disp_font[0x80] = {
   0b00110000, // 49 I
   0b00011110, // 4A J
   0b01110101, // 4B K
-  0b00111100, // 4C L
+  0b00111000, // 4C L 
   0b01010101, // 4D M
   0b00110111, // 4E N
   0b00111111, // 4F O
@@ -85,11 +85,11 @@ static const uint8_t disp_font[0x80] = {
   0b01111100, // 62 b
   0b01011000, // 63 c
   0b01011110, // 64 d
-  0b01111011, // 65 e
+  0b01111001, // 65 e
   0b01110001, // 66 f
   0b01101111, // 67 g
   0b01110100, // 68 h
-  0b00000101, // 69 i
+  0b00110000, // 69 i
   0b00001101, // 6A j
   0b01110101, // 6B k
   0b00111000, // 6C l

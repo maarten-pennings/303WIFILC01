@@ -1,6 +1,10 @@
 // bCLC.ino - alternative firmware for 303WIFILC01: NTP clock with birthday calendar
 // board: Generic ESP8266 module
-#define VERSION "1.0"
+#define VERSION "1.1"
+
+
+// 20220529  1.1  Maarten  Font tweaked, no double bday, better error msgs, fixed bug in bday log
+// 20220528  1.0  Maarten  Created initial version by merging nCLC and webcfg
 
 
 #include <coredecls.h> // Only needed for settimeofday_cb()
@@ -149,7 +153,7 @@ String    mode_bdays;      // The string (with bdays) to show when mode_tag==MOD
 int       mode_step;       // Character index into mode_bdays for scrolling
 uint32_t  mode_stepms;     // time stamp fro scrolling
 #define   MODE_STEP_MS 500 // Scroll time for one step
-bool      flag_bdays = false;
+bool      flag_bdays_avail = false;
 
 void loop() {
   // If in config mode, do config loop (when config completes, it restarts the device)
@@ -158,7 +162,7 @@ void loop() {
   // In normal application mode
   led_set( !wifi_isconnected() );     // LED is on when not connected
 
-  // Check keys
+  // Check buttons
   but_scan();
   if( but_wentdown(BUT3) ) disp_brightness_set( disp_brightness_get()%8 + 1 );
   if( but_wentdown(BUT2) ) mode_tag = mode_tag==MODE_DATE ? MODE_TIME : MODE_DATE; 
@@ -169,7 +173,7 @@ void loop() {
   struct tm * snow= localtime(&tnow); // Returns a struct with time fields (https://www.tutorialspoint.com/c_standard_library/c_function_localtime.htm)
   bool        sync= snow->tm_year>120;// We miss-use "old" time as indication of "time not yet set" (year is 1900 based)
 
-  // If seconds changed: print to console
+  // If seconds changed: print to console, optionally reload call (midnight), optionally show bdays
   if( snow->tm_sec != colon_prev_sec ) {
     // In `snow` the `tm_year` field is 1900 based, `tm_mon` is 0 based, rest is as expected
     Serial.printf("main: %d-%02d-%02d %02d:%02d:%02d (dst=%d) %s\n", snow->tm_year + 1900, snow->tm_mon + 1, snow->tm_mday, snow->tm_hour, snow->tm_min, snow->tm_sec, snow->tm_isdst, sync?"":"NO NTP" );
@@ -179,7 +183,7 @@ void loop() {
     // Reload cal every midnight
     if( (snow->tm_hour==0) && (snow->tm_min==0) && (snow->tm_sec==0) ) cal_tobe_loaded = true;
     // Show cal every calmin minutes
-    if( flag_bdays && (snow->tm_sec==0) && (snow->tm_min % calmin == 0) ) {
+    if( flag_bdays_avail && (mode_tag!=MODE_BDAYS ) && (snow->tm_sec==0) && (snow->tm_min % calmin == 0) ) {
       mode_tag = MODE_BDAYS;
       mode_step = 0;
       mode_stepms = millis()-MODE_STEP_MS;
@@ -197,7 +201,7 @@ void loop() {
         int dots = millis()-colon_msecs<500 ? DISP_DOTNO : DISP_DOTCOLON;
         if( render_hours_flag==RENDER_HOURS_FLAG_AM && !pm ) dots |= DISP_DOT1;
         if( render_hours_flag==RENDER_HOURS_FLAG_PM &&  pm ) dots |= DISP_DOT1;
-        if( flag_bdays ) dots |= DISP_DOT4;
+        if( flag_bdays_avail ) dots |= DISP_DOT4;
         disp_show(buf,dots);
         break; 
       }
@@ -207,13 +211,13 @@ void loop() {
           sprintf(buf,"%2d%c%c", snow->tm_mday, render_months[snow->tm_mon*2], render_months[snow->tm_mon*2+1] );
         else
           sprintf(buf,"%c%c%2d", render_months[snow->tm_mon*2], render_months[snow->tm_mon*2+1], snow->tm_mday );
-        int dots = flag_bdays ? DISP_DOT4 : DISP_DOTNO;
+        int dots = flag_bdays_avail ? DISP_DOT4 : DISP_DOTNO;
         disp_show(buf,dots);
         break; 
       }
       case MODE_BDAYS: {
         if( millis()-mode_stepms > MODE_STEP_MS ) {
-          if( mode_step==0 ) Serial.printf("cal : show %s\n",mode_bdays.c_str() );
+          if( mode_step==0 ) Serial.printf("cal : show '%s'\n",mode_bdays.c_str() );
           char buf[5];
           buf[0]= mode_bdays[mode_step];        
           buf[1]= mode_bdays[mode_step+1];
@@ -224,7 +228,7 @@ void loop() {
           // Serial.printf("cal : %s\n",buf);
           mode_step++;
           mode_stepms = millis();
-          if( mode_step+4 > mode_bdays.length() ) mode_tag = MODE_TIME;
+          if( mode_step+5 > mode_bdays.length() ) mode_tag = MODE_TIME;
         }
         break;
       }
@@ -232,17 +236,16 @@ void loop() {
 
     // Get calendar
     if( cal_tobe_loaded ) {
-      mode_tag = MODE_BDAYS;
       int error = cal_load( cfg.getval("calurl") );
       if( error<0 ) {
         Serial.printf("cal : load error %d\n",error);
-        mode_bdays = String("#") + (-error) + "#";
+        mode_bdays = String("Error ") + error + " lOAd";
       } else if( error>0 ){
-        Serial.printf("cal : parse error %d\n",error);
-        mode_bdays = String("~") + (error) + "~";
+        Serial.printf("cal : file error %d\n",error);
+        mode_bdays = String("Error ") + (error%10) + " lINE " + (error/10);
       } else if( cal_size==0 ) {
         Serial.printf("cal : empty\n");
-        mode_bdays = "?EMPTY?";
+        mode_bdays = "Error no RECS";
       } else {
         int today = cal_daynum( snow->tm_mon+1,snow->tm_mday);
         int ix1 = cal_findfirst(snow->tm_mon+1,snow->tm_mday);
@@ -251,25 +254,26 @@ void loop() {
         mode_bdays = "";
         while( 1 ) {
           int daynum = cal_daynum( cal_month(ix), cal_day(ix) );
-          Serial.printf("cal : bday in %d days %s %04d-%02d-%02d\n",daynum-today,cal_label(ix),cal_year(ix),cal_month(ix),cal_day(ix));
+          Serial.printf("cal : bday in %d days %s %04d-%02d-%02d\n",daynum-today,cal_label(ix).c_str(),cal_year(ix),cal_month(ix),cal_day(ix));
           if( daynum < today+caldays ) {
             int age = snow->tm_year + 1900 - cal_year(ix);
             if( ix<ix1 ) age++;
             if( mode_bdays!="" ) mode_bdays += "  -  ";
             mode_bdays = mode_bdays+(daynum-today)+" "+cal_label(ix)+" "+age;
-            flag_bdays = true;
+            flag_bdays_avail = true;
           }
           ix = (ix+1)%cal_size(); // with wrap around
           if( ix==0 ) today -=365; // add one year (by antidating today)
           if( ix==ix1 ) break; // stop if we are at begin
         }
         if( mode_bdays=="" ) mode_bdays = "no-bdays"; 
-        mode_bdays = "    " + mode_bdays+"    "; // to start and end the display clean;
         Serial.printf("cal : bdays %s\n",mode_bdays.c_str());
-        mode_step = 0;
-        mode_stepms = millis()-MODE_STEP_MS;
       }
-      
+      // Prepare for scroll  
+      mode_tag = MODE_BDAYS;
+      mode_bdays = "    " + mode_bdays+"     "; // to start and end the display clean (one extra at end)
+      mode_step = 0;
+      mode_stepms = millis()-MODE_STEP_MS;
       cal_tobe_loaded = false;
     }
   }

@@ -58,7 +58,7 @@ int    cal_findfirst(int month, int day);
 //   Least significant digit is problem code, rest is the line number in the file.
 //     missing comma in record         (1)
 //     missing name in record          (2)
-//     date is not 10 long             (3)
+//     date is not 10 long             (3) (or extra column on some record, giving all record including the first an extra column)
 //     year-month dash missing         (4)
 //     month-day dash missing          (5)
 //     year out of range               (6)
