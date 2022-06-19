@@ -7,10 +7,10 @@ Reverse engineering the display control of the 303WIFILC01 clock.
 
 First, I checked the pinning of the TM1650.
 The datasheet is Chinese (I could only find bot-translated English versions).
-However, determining the pinout from the [Chinese datasheet](https://datasheet.lcsc.com/lcsc/1810281208_TM-Shenzhen-Titan-Micro-Elec-TM1650_C44444.pdf)
+However, determining the pin-out from the [Chinese datasheet](https://datasheet.lcsc.com/lcsc/1810281208_TM-Shenzhen-Titan-Micro-Elec-TM1650_C44444.pdf)
 is not hard.
 
-In the photo below, the DIGx pins of the TM1650 are labelled in black.
+In the photo below, the DIGx pins of the TM1650 are labeled in black.
 Those are the common cathode pins of the 4 digits.
 In red, find the segment pins A, B, C, D, E, F, G and P (decimal point).
 In blue the other connections (power and I2C).
@@ -32,18 +32,19 @@ It has marking `FJ8401AW`; my guess is that
  - `W` is for white (O for orange, Y for Yellow, G for green, B for blue and somehow S for red).
 
 For example [ELT5361BY](http://www.yitenuo.com/product/display/three/ELT-5361.html) is
-and 0.56 3-digit Yellow  common Anode display from Etnel LED technology.
+a 0.56 inch 3-digit Yellow  common Anode display from Etnel LED Technology.
 
 I believe the internal schematics of the display, and the pinning is as follows.
-Note the DIG2 digit does have a "decimal point", but it is not connected. It is wired to the two dots of the colon.
-Again, DIG1, DIG2, DIG3 and DIG4 are the common cathode pins of the four digits.
+DIG1, DIG2, DIG3 and DIG4 are the common cathode pins of the four digits.
 The segment pins are labeled A, B, C, D, E, F, G and P (decimal point).
+Note the DIG2 digit does have a "decimal point", but it is not connected.
+Its P is wired to the two dots of the colon.
 
 ![display internal](disp-intl.png)
 
 I have confirmed this on the 303WIFILC01 board (with a current and voltage limited probe).
 
-The photo in the first section also shows the display pinout, and it has a diagram of the which segment is A-G or P.
+The photo in the first section also shows the display pin-out, and it has a diagram of the which segment is A-G or P.
 
 
 ## Connection
@@ -68,6 +69,8 @@ and also segments CDE, but segments ABFGP are mixed.
  |          G       |      B    |
  |          P       |      A    |
 
+This is confusing but not a big problem: it just means that we need to address segments differently in software.
+
 
 ## Datasheet
 
@@ -75,14 +78,14 @@ The [Chinese datasheet](https://datasheet.lcsc.com/lcsc/1810281208_TM-Shenzhen-T
 gives us the following key points (focus on display; ignoring support for key scan):
 
  - The device is "semi" I2C. 
-   It is I2C in the sense that it requires a start and stop condition, and in between those, bytes are sent. 
+   It is I2C in the sense that it requires a _start_ and _stop_ condition, and in between those, bytes are sent. 
    It is not I2C because the device itself has no I2C address, it needs to be on a bus by its own.
    It borrows from I2C that it has registers that the host (ESP8266) should write to,
    and those registers have a (one byte) address.
    
- - There is one system _control_ register at location 48H (0x48).
+ - There is one system _control_ register and four _data_ registers.
    
- - The control register determines whether the display is on or off, 
+ - The control register is at location 48H (0x48), it determines whether the display is on or off, 
    whether a 7 or 8 segment display is attached, and what brightness to use.
    
    ![control](TM1650-control.png)
@@ -112,8 +115,7 @@ gives us the following key points (focus on display; ignoring support for key sc
 
  - For displaying content there is a _data_ register per digit.
  
- - The data registers (this is overly verbose in the datasheet) for digits 1 to 4
-   are at address 0x68, 0x6A, 0x6C and 0x6E.
+ - The data registers for digits 1 to 4 are at address 0x68, 0x6A, 0x6C and 0x6E (this is overly verbose in the datasheet).
 
    ![data](TM1650-data.png)
    
@@ -187,9 +189,9 @@ I do not understand why that makes sense.
 To wrap up the display control, I wrote a final sketch [fonttest](fonttest).
 It has three features
 
- - My own simple TM1650 driver
+ - My own simple TM1650 driver.
  - Mapping bits 0, 1, 2, 3, 4, 5, 6, 7, and 8 to segments A, B, C, D, E, F, G, and P by applying a bit shuffle lookup.
- - Inclusion of the [lookAlike7s font](https://github.com/maarten-pennings/SevenSegment-over-Serial/tree/main/font#lookalike7s)
+ - Inclusion of the [lookAlike7s font](https://github.com/maarten-pennings/SevenSegment-over-Serial/tree/main/font#lookalike7s).
  - A demo of all printable ASCII characters (32..127).
  
 (end)
