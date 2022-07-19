@@ -25,7 +25,7 @@ The board features
 
  - Three general purpose buttons (S1, S2, S3); connected to ESP8266.
  - One general purpose red LED (D1); connected to ESP8266.
- - A USB-serial header to program and serial access the ESP8266 (P1); reset signal is missing.
+ - A programming port (p1) to program and serial access the ESP8266; reset signal is missing.
    - The labels for P1 are a bit confusing; they are _below_ the holes.
    - The P1 5V is indeed a 5V - i.e. connected to + on power header P3 or the 5V of the USB connector.
    - The other P1 pins (TX, RX, IO0) are 3V3, since they hook to the ESP8266.
@@ -33,7 +33,7 @@ The board features
  - A 4-digit 7 segment display with decimal points and colon.
  - Micro USB (P2) for powering the board; there is no on-bard USB-to-serial chip, 
    so no flashing or serial access to ESP8266 over USB.
- - Alternative (P3) 5V power supply.
+ - Alternative 5V (P3) power supply.
  - A holder (BT1) for a 3V battery for the time keeping chip (U3).
 
 
