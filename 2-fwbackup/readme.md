@@ -12,7 +12,7 @@ how to make a backup of an ESP8266. That is what I describe here.
 ## Get PC software
 
  - Ensure you have an upto date Python (I have 3.9)
- - Make a virtual env (if you want)
+ - Make a virtual env (if you want) via `python.exe  -m venv  env`
  - install packages `pyserial`, and `esptool`
  - esptool is now in `env\Lib\site-packages\esptool.py`
 
@@ -41,15 +41,16 @@ If you have python (3.9) installed on a windows PC, you can just run [`setup.bat
 
 ## Make backup  
 
-Find the FTDI COM port in Device Manager (for me it is `COM12`).
-Then make a backup of the entire flash memory.
+To make a backup of the entire flash memory, first
+find the FTDI COM port in Device Manager (for me it is `COM12`).
 
-Since my FTDI is on port 12, and since thew flash is 1M  byte (8M bit), I use this command.
-It is also available as `run.bat`.
+Since my FTDI is on port 12, and since the flash is 8M bit (or 1M byte or 1024×1024 or 1048576), I use this command.
 
 ```cmd
 python  env\Lib\site-packages\esptool.py  --port COM12  --baud 115200  read_flash 0x0000 1048576  backup.bin
 ```
+
+It is also available as `run.bat`.
 
 ```text
 You might have to update the --port argument
