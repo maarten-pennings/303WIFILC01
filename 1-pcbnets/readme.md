@@ -90,6 +90,17 @@ In words:
  - GPIO12 is "SCL" for TM1650 (not real I2C)
 
 
+## GPIO nets (timekeeping)
+
+How does the ESP8266 control the timekeeping chip - thanks to @JieffeEl in [issue1](https://github.com/maarten-pennings/303WIFILC01/issues/1). 
+
+![GPIO time nets](pcb-time.png)  
+
+In words:
+ - GPIO16 to DS1302 CLK
+ - GPIO05 to DS1302 CE	
+ - GPIO14 to DS1302 IO	
+
 (end)
   
 
