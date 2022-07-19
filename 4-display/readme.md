@@ -53,23 +53,25 @@ The TM1650 and the display are made for each other. Both have 4 common cathodes 
 I would expect that the corresponding pins are connected, **but they are not**.
 
 I probed the TM1650 pins and the display pins to see which is connected to which.
-The photo in the first section has that indicated with the black ❶❷❸❹ (digits) and the red ⓿❶❷❸❹❺❻❼ (segments).
+The photo in the first section has that indicated with the encircled numbers:
+black ❶❷❸❹ (for the common cathode of the digits) and red ⓿❶❷❸❹❺❻❼ (for the segments).
 
 We observe that the DIG pins are connected as expected, 
 and also segments CDE, but segments ABFGP are mixed.
 
- | to light segment | power pin |
- |:----------------:|:---------:|
- |          A       |      F    |
- |          B       |      P    |
- |          C       |      C    |
- |          D       |      D    |
- |          E       |      E    |
- |          F       |      G    |
- |          G       |      B    |
- |          P       |      A    |
+ | to light segment | power TM1650 pin |
+ |:----------------:|:----------------:|
+ |          A       |       F          |
+ |          B       |       P          |
+ |          C       |       C          |
+ |          D       |       D          |
+ |          E       |       E          |
+ |          F       |       G          |
+ |          G       |       B          |
+ |          P       |       A          |
 
-This is confusing but not a big problem: it just means that we need to address segments differently in software.
+This is confusing but not a big problem: it just means that we need to be careful when
+addressing segments in software.
 
 
 ## Datasheet
