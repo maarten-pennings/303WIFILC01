@@ -2,6 +2,15 @@
 
 New firmware for the ESP8266 based _303 WIFI LC 01 clock_.
 
+
+## Libraries
+
+This sketch relies on two liberties `Cfg` and `Nvm`.
+They are available on my GitHub:
+ - [Cfg](https://github.com/maarten-pennings/Cfg)
+ - [Nvm](https://github.com/maarten-pennings/Nvm)
+
+
 ## nCLC - a basic NTP clock
 
 A basic NTP clock is available in source [nCLC](nCLC) or as [binary](nCLC.ino.bin).
