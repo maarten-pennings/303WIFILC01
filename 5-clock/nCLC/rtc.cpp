@@ -36,6 +36,26 @@ bool rtcInit() {
     // Initialize RTC
     CHK(rtc.begin());
 
+    uint8_t buf[9];
+    CHK(rtc.readBuffer(0, buf, 9));
+    Serial.printf("rtc : regs - %02x %02x %02x %02x %02x %02x %02x %02x %02x\n",
+                  buf[0], buf[1], buf[2], buf[3], buf[4], buf[5], buf[6], buf[7], buf[8]);
+// Trickle-Charge register - 0x8
+//            TCS BITS               Hex
+//    7   6   5   4   3   2   1   0        FUNCTION
+//    X   X   X   X   X   X   0   0        Disabled
+//    X   X   X   X   0   0   X   X        Disabled
+//    X   X   X   X   1   1   X   X        Disabled
+//    1   0   1   0   0   1   0   1   A5   1 Diode, 2kΩ
+//    1   0   1   0   0   1   1   0   A6   1 Diode, 4kΩ
+//    1   0   1   0   0   1   1   1   A7   1 Diode, 8kΩ
+//    1   0   1   0   1   0   0   1   A9   2 Diodes, 2kΩ
+//    1   0   1   0   1   0   1   0   AA   2 Diodes, 4kΩ
+//    1   0   1   0   1   0   1   1   AB   2 Diodes, 8kΩ
+//    0   1   0   1   1   1   0   0   5C   Disabled / Initial power-on state
+    // activate Trickle-Charge. Set - 1 Diode, 2kΩ
+    CHK(rtc.writeRegister(0x8, 0xA5));
+
     return true;
 }
 
