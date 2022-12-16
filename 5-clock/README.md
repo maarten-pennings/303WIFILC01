@@ -2,13 +2,20 @@
 
 New firmware for the ESP8266 based _303 WIFI LC 01 clock_.
 
+There are two versions: nCLC and dCLC.
+nCLC is an NTP-only clock; it does not use the DS1302.
+dCLC has dual time source: NTP and the DS1302.
+The latter is an upgrade made by [Utyf](https://github.com/Utyff).
 
 ## Libraries
 
-This sketch relies on two liberties `Cfg` and `Nvm`.
+The nCLC sketch relies on two liberties `Cfg` and `Nvm`.
 They are available on my GitHub:
  - [Cfg](https://github.com/maarten-pennings/Cfg)
  - [Nvm](https://github.com/maarten-pennings/Nvm)
+
+The dCLC sketcs needs one more.
+ - [DS103 driver](https://github.com/Erriez/ErriezDS1302) from [Erriez](https://github.com/Erriez).
 
 
 ## nCLC - a basic NTP clock
@@ -80,6 +87,11 @@ Hard resetting via RTS pin...
 
 (env) C:\Repos\303WIFILC01\2-fwbackup>
 ```
+
+## dCLC - a NTP clock with DS1302
+
+[Utyf](https://github.com/Utyff) upgraded nCLC with DS1302 support.
+Arduino source [dCLC](dCLC) is very similar.
 
 
 (end)
