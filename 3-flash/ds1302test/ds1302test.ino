@@ -1,4 +1,6 @@
 #include <ErriezDS1302.h> // https://github.com/Erriez/ErriezDS1302
+// board: Generic ESP8266 module
+
 
 // Connect DS1302 data pin to Arduino DIGITAL pin
 #define DS1302_CLK_PIN      16

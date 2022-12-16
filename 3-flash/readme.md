@@ -132,4 +132,13 @@ Note that the decimal point in the center is replaced by the center colon.
 With the display having 6+6 pins (12), and controlling 4 rows and 8 columns (12), a choice had to be made.
 
 
+## Time keeping chip
+
+[Utyf](https://github.com/Utyff) wrote a [test](ds1302test) application for the DS1302.
+It relies on a [DS103 driver](https://github.com/Erriez/ErriezDS1302) from [Erriez](https://github.com/Erriez).
+
+
 (end)
+
+
+

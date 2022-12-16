@@ -102,6 +102,16 @@ In words:
  - GPIO05 to DS1302 CE	
  - GPIO14 to DS1302 IO	
 
+
+## Schematic
+
+I want to thank [Utyf](https://github.com/Utyff) for contributing a schematic.
+
+![Schematic](Schematic_303WIFILC01.png)
+
+It is also available as [pdf](Schematic_303WIFILC01.pdf) or in [EasyEDA](https://oshwlab.com/utyf/303wifilc01).
+
+
 (end)
   
 
