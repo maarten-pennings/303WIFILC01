@@ -150,7 +150,7 @@ uint32_t  colon_msecs;
 #define   MODE_BDAYS   3
 int       mode_tag = MODE_TIME; // one of MODE_XXX, what to display
 String    mode_bdays;      // The string (with bdays) to show when mode_tag==MODE_BDAYS
-int       mode_step;       // Character index into mode_bdays for scrolling
+unsigned  mode_step;       // Character index into mode_bdays for scrolling
 uint32_t  mode_stepms;     // time stamp fro scrolling
 #define   MODE_STEP_MS 500 // Scroll time for one step
 bool      flag_bdays_avail = false;
@@ -196,7 +196,8 @@ void loop() {
       case MODE_TIME: {
         bool pm = snow->tm_hour >= 12;
         int  hr = snow->tm_hour % render_hours_len;
-        char buf[5];
+        if( render_hours_len==12 && hr==0 ) hr=12;
+        char buf[32];
         sprintf(buf,"%2d%02d", hr, snow->tm_min );
         int dots = millis()-colon_msecs<500 ? DISP_DOTNO : DISP_DOTCOLON;
         if( render_hours_flag==RENDER_HOURS_FLAG_AM && !pm ) dots |= DISP_DOT1;
@@ -243,7 +244,7 @@ void loop() {
       } else if( error>0 ){
         Serial.printf("cal : file error %d\n",error);
         mode_bdays = String("Error ") + (error%10) + " lINE " + (error/10);
-      } else if( cal_size==0 ) {
+      } else if( cal_size()==0 ) {
         Serial.printf("cal : empty\n");
         mode_bdays = "Error no RECS";
       } else {

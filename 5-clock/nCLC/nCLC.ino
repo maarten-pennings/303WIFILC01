@@ -143,9 +143,10 @@ void loop() {
   }
   
   if( sync && !show_date ) {
-    char bnow[5];
+    char bnow[32];
     bool pm = snow->tm_hour >= 12;
     int  hr = snow->tm_hour % render_hours_len;
+    if( render_hours_len==12 && hr==0 ) hr=12;
     sprintf(bnow,"%2d%02d", hr, snow->tm_min );
     int dots = millis()-colon_msecs<500 ? DISP_DOTNO : DISP_DOTCOLON;
     if( render_hours_flag==RENDER_FLAG_AM && !pm ) dots |= DISP_DOT4;
